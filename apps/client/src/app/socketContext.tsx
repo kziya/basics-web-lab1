@@ -1,13 +1,16 @@
-import React, { createContext, ReactNode, useContext } from 'react';
-import { Socket } from 'socket.io-client';
+import React, { createContext, ReactNode, useContext, useEffect } from 'react';
+import { io, Socket } from 'socket.io-client';
+import configuration from './config/configuration';
 
-export type SocketContextType = Socket | null;
+export type SocketContextType = {
+  socket: Socket;
+} | null;
 const SocketContext = createContext<SocketContextType>(null);
 
-export const useSocket = (): SocketContextType => {
+export const useSocket = (): { socket: Socket } => {
   const context = useContext(SocketContext);
 
-  if (context === undefined) {
+  if (context == null) {
     throw new Error('useSocket must be used within a SocketProvider');
   }
 
@@ -17,9 +20,20 @@ export const useSocket = (): SocketContextType => {
 export const SocketProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const socket = io(configuration.SOCKET_URL, {
+    autoConnect: true,
+    path: '/chat',
+  });
+
+  useEffect(() => {
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
+
   return (
-    <div>
+    <SocketContext.Provider value={{ socket }}>
       <h1>{children}</h1>
-    </div>
+    </SocketContext.Provider>
   );
 };
