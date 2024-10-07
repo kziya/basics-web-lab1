@@ -9,6 +9,13 @@ module.exports = {
   devServer: {
     port: 4200,
     historyApiFallback: true,
+    proxy: [
+      {
+        context: ['/socket.io'],
+        target: `ws://localhost:3000`,
+        ws: true,
+      },
+    ],
   },
   plugins: [
     new NxWebpackPlugin({

@@ -22,14 +22,7 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const socket = io(configuration.SOCKET_URL, {
     autoConnect: true,
-    path: '/chat',
   });
-
-  useEffect(() => {
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]);
 
   return (
     <SocketContext.Provider value={{ socket }}>

@@ -5,5 +5,10 @@
   "projectType": "application",
   "tags": [],
   "// targets": "to see all targets run: nx show project client --web",
-  "targets": {}
+  "targets": {
+    "development": {
+      "buildTarget": "client:build:development",
+      "proxyConfig": "apps/client/proxy.conf.json"
+    }
+  }
 }

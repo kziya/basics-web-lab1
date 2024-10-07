@@ -18,11 +18,8 @@ export const Chat: React.FC = () => {
       navigate('/');
       return;
     }
+    socket.emit('join', { roomName, userName });
   }, [roomName, userName]);
-
-  useEffect(() => {
-    socket.emit('joinRoom', { roomName, userName });
-  }, []);
 
   socket.on('message', (message) => {
     setMessages([...messages, message]);
@@ -37,6 +34,8 @@ export const Chat: React.FC = () => {
     };
     setMessages([...messages, newMessage]); // Add new message to the array
     setMessage(''); // Clear input
+
+    socket.emit('message', newMessage);
   };
 
   return (
